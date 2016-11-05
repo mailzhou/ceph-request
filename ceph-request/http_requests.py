@@ -1,10 +1,10 @@
+import requests
+from requests_toolbelt.utils import dump
+from .awsauth import S3Auth
 def s3_get(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key=''):
     '''
     get request use aws2
     '''
-    import requests
-    from requests_toolbelt.utils import dump
-    from awsauth import S3Auth
     url = 'http://%s:%s%s' % (host,port,cmd)
     response = requests.get(url, auth=S3Auth(access_key, secret_key, service_url=host+":"+port))
     data = dump.dump_all(response)
@@ -20,9 +20,6 @@ def s3_put(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',
     '''
     put request use aws2
     '''
-    import requests
-    from requests_toolbelt.utils import dump
-    from awsauth import S3Auth
     url = 'http://%s:%s%s' % (host, port, cmd)
     response =None
     if file:
@@ -48,9 +45,6 @@ def s3_delete(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key=
     '''
     delete request use aws2
     '''
-    import requests
-    from requests_toolbelt.utils import dump
-    from awsauth import S3Auth
     url = 'http://%s:%s%s' % (host,port,cmd)
     response = requests.delete(url, auth=S3Auth(access_key, secret_key, service_url=host+":"+port))
     data = dump.dump_all(response)
@@ -60,9 +54,6 @@ def s3_head(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key=''
     '''
     head request use aws2
     '''
-    import requests
-    from requests_toolbelt.utils import dump
-    from awsauth import S3Auth
     url = 'http://%s:%s%s' % (host,port,cmd)
     response = requests.head(url, auth=S3Auth(access_key, secret_key, service_url=host+":"+port))
     data = dump.dump_all(response)

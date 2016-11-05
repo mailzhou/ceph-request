@@ -12,7 +12,6 @@ import getopt
 
 def set_configure(config_file):
     ceph_rquest_config = {}
-    logger.info('START CHECK IF CONFIGURE FILE EXIST')
     if not os.path.exists(config_file):
         raise CEPH_REQUEST_CONFIG_FILE_NOT_EXIST
     try:
@@ -85,9 +84,6 @@ def main():
             _content = a
         else:
             assert False, "未知的选项"
-
-    logger.info("method :%s"% (_method,))
-    logger.info("cmd :%s" % (_cmd,))
 
     try:
         ceph_rquest_config = set_configure(_configure_file)

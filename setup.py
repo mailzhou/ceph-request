@@ -23,7 +23,7 @@ setup(name='ceph-request',
       ],
       entry_points={
         'console_scripts':[
-            'ceph-request = ceph-request.ceph-request:main'
+            'ceph-request = ceph_request.ceph_request:main'
         ]
       },
 )

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os,sys
+import os, sys
 from os.path import expanduser
 from ceph_request_exceptions import *
+from http_requests import s3_head,s3_delete,s3_get,s3_post,s3_put
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -26,38 +27,116 @@ def set_configure(config_file):
         print 'Error Config File:', err
     return ceph_rquest_config
 
+
 def usage():
-    print '''
-    usage: -c --config  : default ~/ceph-request.cfg
+    print '''配置文件示例:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[s3]
+host = 192.168.10.147
+port = 8081
+access_key = admin
+secret_key = admin
 
-    '''
-
-
+[swift]
+host = 192.168.10.147
+port = 8081
+subuser = admin:admin
+secret_key = admin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-c 指定配置文件，默认使用用户home下的ceph-request.cfg文件
+-v 版本
+-m --method 指定发送请求类型：[GET PUT POST DETELE HEAD]
+-h --header 设置请求头
+-r --request 发送的url  /   /bucket   /admin   /bucket/object
+--file 指定上传文件
+--content 设置body体用使用字符串内容
+'''
 
 def main():
     try:
-        options, args = getopt.getopt(sys.argv[1:],"hc:v", ["help","config=","version"])
+        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help", "config=", "version","method=","request=","header=","file=","content="])
     except getopt.GetoptError as e:
         usage()
     _configure_file = expanduser("~") + '/ceph-request.cfg'
+    _cmd = ''
+    _method = ''
+    _header = {}
+    _file = None
+    _content = ''
     for o, a in options:
         if o == "-v":
             print "version 1.0.0"
+            sys.exit()
         elif o in ("-h", "--help"):
             usage()
             sys.exit()
         elif o in ("-c", "--config"):
             _configure_file = a
+        elif o in ("-m", "--method"):
+            _method = a
+        elif o in ("-r", "--request"):
+            _cmd = a
+            print str(a)
+        elif o in ("--header",):
+            _header = a
+        elif o in ("--file",):
+            _file = a
+        elif o in ("--content",):
+            _content = a
         else:
-            assert False, "unhandled option"
-    print args
+            assert False, "未知的选项"
+
+    logger.info("method :%s"% (_method,))
+    logger.info("cmd :%s" % (_cmd,))
 
     try:
         ceph_rquest_config = set_configure(_configure_file)
-        print '__host__', ceph_rquest_config['s3_host']
     except CEPH_REQUEST_CONFIG_FILE_NOT_EXIST:
-        print "please configure your file"
+        print "请设置好配置文件"
 
+    if str(_method).lower() == 'get':
+        s3_get(
+            host=ceph_rquest_config['s3_host'],
+            port=ceph_rquest_config['s3_port'],
+            cmd=_cmd,
+            access_key=ceph_rquest_config['s3_access_key'],
+            secret_key=ceph_rquest_config['s3_secret_key']
+        )
+
+        # if str(_method).lower() == 'post':
+        #     s3_post()
+        #
+
+    if str(_method).lower() == 'put':
+        s3_put(
+            host=ceph_rquest_config['s3_host'],
+            port=ceph_rquest_config['s3_port'],
+            cmd=_cmd,
+            access_key=ceph_rquest_config['s3_access_key'],
+            secret_key=ceph_rquest_config['s3_secret_key'],
+            headers=_header,
+            file = _file,
+            content= _content
+        )
+
+
+    if str(_method).lower() == 'delete':
+        s3_delete(
+            host=ceph_rquest_config['s3_host'],
+            port=ceph_rquest_config['s3_port'],
+            cmd=_cmd,
+            access_key=ceph_rquest_config['s3_access_key'],
+            secret_key=ceph_rquest_config['s3_secret_key']
+        )
+
+    if str(_method).lower() == 'head':
+        s3_head(
+            host=ceph_rquest_config['s3_host'],
+            port=ceph_rquest_config['s3_port'],
+            cmd=_cmd,
+            access_key=ceph_rquest_config['s3_access_key'],
+            secret_key=ceph_rquest_config['s3_secret_key']
+        )
 
 
 if __name__ == "__main__":

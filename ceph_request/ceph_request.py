@@ -61,7 +61,7 @@ def main():
     _method = ''
     _header = {}
     _file = None
-    _content = ''
+    _content = None
     for o, a in options:
         if o == "-v":
             print "version 1.0.0"

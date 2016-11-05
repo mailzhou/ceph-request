@@ -4,11 +4,7 @@ import os, sys
 from os.path import expanduser
 from ceph_request_exceptions import *
 from http_requests import s3_head,s3_delete,s3_get,s3_post,s3_put
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 import getopt
-
 
 def set_configure(config_file):
     ceph_rquest_config = {}
@@ -79,7 +75,6 @@ def main():
             _method = a
         elif o in ("-r", "--request"):
             _cmd = a
-            print str(a)
         elif o in ("--header",):
             _header = a
         elif o in ("--file",):

@@ -33,8 +33,6 @@ def s3_put(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',
                                     headers=headers, data=file_content)
 
     elif content:
-        print url
-        print content
         response = requests.put(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),
                                 headers=headers, data=content)
     else:

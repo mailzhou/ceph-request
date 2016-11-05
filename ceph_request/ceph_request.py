@@ -43,7 +43,8 @@ subuser = admin:admin
 secret_key = admin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -c 指定配置文件，默认使用用户home下的ceph-request.cfg文件
--v 版本
+--version 版本
+-v 显示详细请求
 -m --method 指定发送请求类型：[GET PUT POST DETELE HEAD]
 -h --header 设置请求头
 -r --request 发送的url  /   /bucket   /admin   /bucket/object
@@ -53,7 +54,7 @@ secret_key = admin
 
 def main():
     try:
-        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help", "config=", "version","method=","request=","header=","file=","content="])
+        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help","version","config=", "version","method=","request=","header=","file=","content="])
     except getopt.GetoptError as e:
         usage()
     _configure_file = expanduser("~") + '/ceph-request.cfg'
@@ -62,12 +63,15 @@ def main():
     _header = {}
     _file = None
     _content = None
+    _show_dump = False
     for o, a in options:
         if o == "-v":
-            print "version 1.0.0"
-            sys.exit()
+            _show_dump = True
         elif o in ("-h", "--help"):
             usage()
+            sys.exit()
+        elif o in ("--version",):
+            print "version 1.0.0"
             sys.exit()
         elif o in ("-c", "--config"):
             _configure_file = a
@@ -96,7 +100,8 @@ def main():
             port=ceph_rquest_config['s3_port'],
             cmd=_cmd,
             access_key=ceph_rquest_config['s3_access_key'],
-            secret_key=ceph_rquest_config['s3_secret_key']
+            secret_key=ceph_rquest_config['s3_secret_key'],
+            show_dump=_show_dump
         )
 
         # if str(_method).lower() == 'post':
@@ -112,7 +117,8 @@ def main():
             secret_key=ceph_rquest_config['s3_secret_key'],
             headers=_header,
             file = _file,
-            content= _content
+            content= _content,
+            show_dump=_show_dump
         )
 
 
@@ -122,7 +128,8 @@ def main():
             port=ceph_rquest_config['s3_port'],
             cmd=_cmd,
             access_key=ceph_rquest_config['s3_access_key'],
-            secret_key=ceph_rquest_config['s3_secret_key']
+            secret_key=ceph_rquest_config['s3_secret_key'],
+            show_dump=_show_dump
         )
 
     if str(_method).lower() == 'head':
@@ -131,7 +138,8 @@ def main():
             port=ceph_rquest_config['s3_port'],
             cmd=_cmd,
             access_key=ceph_rquest_config['s3_access_key'],
-            secret_key=ceph_rquest_config['s3_secret_key']
+            secret_key=ceph_rquest_config['s3_secret_key'],
+            show_dump=_show_dump
         )
 
 

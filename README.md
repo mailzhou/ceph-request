@@ -13,10 +13,11 @@ pip install ceph-request
 # HOW
 
 ## s3
+
 ```
+
 [root@graphite ~]# ceph-request -h
 CONFIGURE FILE EXP.:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [s3]
 host = 192.168.10.147
 port = 8081
@@ -27,7 +28,6 @@ host = 192.168.10.147
 port = 8081
 subuser = admin:admin
 secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -c                       set configure file. the default configure file is ~/ceph-request.cfg.
 --version                get the version of ceph-request tool.
 -v                       show more info of request.
@@ -38,6 +38,7 @@ secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
 --content                set http request body content
 --download               set loal file name for download
 --type                   default type is s3, you can use --type swift to sent swift request to radosgw
+
 ```
 
 create bucket named yuliyang

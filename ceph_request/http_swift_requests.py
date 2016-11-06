@@ -53,16 +53,21 @@ def swift_put(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',
     '''
     put request use aws2
     '''
+    url = 'http://%s:%s%s' % (host, port, cmd)
+    serverurl = '%s:%s' % (host, port)
+    X_Auth_Token = swift_auth(serverurl, subuser=subuser, secret_key=secret_key)
+
     if headers:
         headers = json.loads(headers)
-    url = 'http://%s:%s%s' % (host, port, cmd)
+        headers['x-auth-token'] = X_Auth_Token
+    else:
+        headers = {'x-auth-token': X_Auth_Token}
     response =None
     if file:
         with open(file, 'rb') as fin:
             file_content = fin.read()
         #upload object from file
         response = requests.put(url, headers=headers, data=file_content)
-
     elif content:
         #upload object from content
         response = requests.put(url, headers=headers, data=content)

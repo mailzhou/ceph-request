@@ -117,8 +117,8 @@ def main():
                 cmd=_cmd,
                 subuser=ceph_request_config['swift_subuser'],
                 secret_key=ceph_request_config['swift_secret_key'],
-                headers=None,
-                show_dump=False,
+                headers=_headers,
+                show_dump=_show_dump,
                 download_file=_down_load_file
             )
         else:
@@ -135,7 +135,17 @@ def main():
 
     if str(_method).lower() == 'post':
         if str(_type).lower() == 'swift':
-            swift_post()
+            swift_post(
+                host=ceph_request_config['swift_host'],
+                port=ceph_request_config['swift_port'],
+                cmd=_cmd,
+                subuser=ceph_request_config['swift_subuser'],
+                secret_key=ceph_request_config['swift_secret_key'],
+                headers=_headers,
+                file=_file,
+                content=_content,
+                show_dump=_show_dump
+            )
         else:
             s3_post(
                 host=ceph_request_config['s3_host'],
@@ -151,7 +161,17 @@ def main():
 
     if str(_method).lower() == 'put':
         if str(_type).lower() == 'swift':
-            swift_put()
+            swift_put(
+                host=ceph_request_config['swift_host'],
+                port=ceph_request_config['swift_port'],
+                cmd=_cmd,
+                subuser=ceph_request_config['swift_subuser'],
+                secret_key=ceph_request_config['swift_secret_key'],
+                headers=_headers,
+                file=_file,
+                content=_content,
+                show_dump=_show_dump
+            )
         else:
             s3_put(
                 host=ceph_request_config['s3_host'],

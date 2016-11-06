@@ -10,5 +10,7 @@ class CEPH_REQUEST_Exception(RuntimeError):
 class CEPH_REQUEST_CONFIG_FILE_NOT_EXIST(CEPH_REQUEST_Exception):
     """Access was denied for the request."""
 
+class CEPH_REQUEST_SWIFT_TYPE_CONFIG_NOT_RIGHT(CEPH_REQUEST_Exception):
+    """Access was denied for the request."""
 
 

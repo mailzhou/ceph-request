@@ -27,6 +27,7 @@ def s3_get(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',
 
 
 # TODO ADD POST METHOD
+# multi-part upload use it ,we will add it later
 def s3_post(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',show_dump = False):
     pass
 

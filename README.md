@@ -6,6 +6,7 @@ python setup.py install
 
 # HOW
 
+## s3
 ```
 ceph-request --help
 ```
@@ -82,4 +83,22 @@ set header
 > Date: Sun, 06 Nov 2016 02:30:32 GMT
 > Connection: Keep-Alive
 > 
+```
+
+## swift
+
+list buckets
+```
+ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1'
+```
+
+list bucket
+
+```
+ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang2'
+```
+
+download file
+```
+ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang/obj1'  --download swiftdownobj1
 ```

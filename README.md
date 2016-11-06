@@ -1,7 +1,13 @@
 # INSTALL
 
 ```
+git clone git@github.com:wzyuliyang/ceph-request.git 
+cd ceph-request
 python setup.py install
+
+or
+
+pip install ceph-request
 ```
 
 # HOW

@@ -5,6 +5,7 @@ from os.path import expanduser
 from ceph_request_exceptions import *
 from http_requests import s3_head,s3_delete,s3_get,s3_post,s3_put
 import getopt
+import json
 
 def set_configure(config_file):
     ceph_rquest_config = {}
@@ -21,6 +22,8 @@ def set_configure(config_file):
     except ConfigParser.NoSectionError, err:
         print 'Error Config File:', err
     return ceph_rquest_config
+
+VALID_HEADE=[]
 
 
 def usage():
@@ -42,21 +45,24 @@ secret_key = admin
 --version 版本
 -v 显示详细请求
 -m --method 指定发送请求类型：[GET PUT POST DETELE HEAD]
--h --header 设置请求头
+-h --headers 设置请求头  headers = {'content-type':'binary/txt','x-amz-meta-xxx':'xxx'}
 -r --request 发送的url  /   /bucket   /admin   /bucket/object
 --file 指定上传文件
 --content 设置body体用使用字符串内容
+--download 设置下载文件名
 '''
 
+
 def main():
+
     try:
-        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help","version","config=", "version","method=","request=","header=","file=","content=","download="])
+        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help","version","config=", "version","method=","request=","headers=","file=","content=","download="])
     except getopt.GetoptError as e:
         usage()
     _configure_file = expanduser("~") + '/ceph-request.cfg'
     _cmd = ''
     _method = ''
-    _header = {}
+    _headers = None
     _file = None
     _content = None
     _show_dump = False
@@ -76,8 +82,8 @@ def main():
             _method = a
         elif o in ("-r", "--request"):
             _cmd = a
-        elif o in ("--header",):
-            _header = a
+        elif o in ("--headers",):
+            _headers = a
         elif o in ("--file",):
             _file = a
         elif o in ("--content",):
@@ -93,6 +99,7 @@ def main():
         print "请设置好配置文件"
 
     if str(_method).lower() == 'get':
+
         s3_get(
             host=ceph_rquest_config['s3_host'],
             port=ceph_rquest_config['s3_port'],
@@ -100,7 +107,8 @@ def main():
             access_key=ceph_rquest_config['s3_access_key'],
             secret_key=ceph_rquest_config['s3_secret_key'],
             show_dump=_show_dump,
-            download_file=_down_load_file
+            download_file=_down_load_file,
+            headers=_headers
         )
 
         # if str(_method).lower() == 'post':
@@ -114,7 +122,7 @@ def main():
             cmd=_cmd,
             access_key=ceph_rquest_config['s3_access_key'],
             secret_key=ceph_rquest_config['s3_secret_key'],
-            headers=_header,
+            headers=_headers,
             file = _file,
             content= _content,
             show_dump=_show_dump

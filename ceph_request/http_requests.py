@@ -1,23 +1,23 @@
 import requests
 from requests_toolbelt.utils import dump
 from .awsauth import S3Auth
-def s3_get(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',show_dump = False,download_file =None):
+import json
+def s3_get(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',headers=None,show_dump = False,download_file =None):
     '''
     get request use aws2
     '''
     url = 'http://%s:%s%s' % (host,port,cmd)
-
-
+    if headers:
+        headers = json.loads(headers)
     if download_file:
         import shutil
-        response = requests.get(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),stream=True)
+        response = requests.get(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),stream=True,headers=headers)
         if response.status_code == 200:
             with open(download_file, 'wb') as f:
                 response.raw.decode_content = True
                 shutil.copyfileobj(response.raw, f)
     else:
-        response = requests.get(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port))
-
+        response = requests.get(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),headers=headers)
 
     if show_dump:
         data = dump.dump_all(response)
@@ -35,19 +35,23 @@ def s3_put(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',
     '''
     put request use aws2
     '''
+    if headers:
+        headers = json.loads(headers)
     url = 'http://%s:%s%s' % (host, port, cmd)
     response =None
     if file:
         with open(file, 'rb') as fin:
             file_content = fin.read()
-
+        #upload object from file
         response = requests.put(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),
                                     headers=headers, data=file_content)
 
     elif content:
+        #upload object from content
         response = requests.put(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),
                                 headers=headers, data=content)
     else:
+        # create bucket
         response = requests.put(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),
                                 headers=headers)
     if show_dump:

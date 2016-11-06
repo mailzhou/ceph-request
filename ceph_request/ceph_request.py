@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os, sys
+import os, sys,json,getopt
 from os.path import expanduser
 from ceph_request_exceptions import *
 from http_s3_requests import s3_head, s3_delete, s3_get, s3_post, s3_put
 from http_swift_requests import swift_head, swift_delete, swift_get, swift_post, swift_put
-import getopt
-import json
 
 def set_configure(config_file):
+    '''
+    set configure
+    '''
     ceph_request_config = {}
     if not os.path.exists(config_file):
         raise CEPH_REQUEST_CONFIG_FILE_NOT_EXIST
@@ -28,35 +29,33 @@ def set_configure(config_file):
         print 'Error Config File:', err
     return ceph_request_config
 
-
-VALID_HEADE = []
-
-
 def usage():
-    print '''配置文件示例:
+    '''
+    show usage
+    '''
+    print '''CONFIGURE FILE EXP.:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [s3]
 host = 192.168.10.147
 port = 8081
 access_key = admin
 secret_key = admin
-
 [swift]
 host = 192.168.10.147
 port = 8081
 subuser = admin:admin
-secret_key = admin
+secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--c 指定配置文件，默认使用用户home下的ceph-request.cfg文件
---version 版本
--v 显示详细请求
--m --method 指定发送请求类型：[GET PUT POST DETELE HEAD]
--h --headers 设置请求头  headers = {'content-type':'binary/txt','x-amz-meta-xxx':'xxx'}
--r --request 发送的url  /   /bucket   /admin   /bucket/object
---file 指定上传文件
---content 设置body体用使用字符串内容
---download 设置下载文件名
---type 如果不指定，使用s3, --type swift 则使用swift
+-c                       set configure file. the default configure file is ~/ceph-request.cfg.
+--version                get the version of ceph-request tool.
+-v                       show more info of request.
+-m --method              the http method. one type of [GET PUT POST DETELE HEAD]
+-h --headers             set request header.   exp. --headers '{"Range": "bytes=0-10"}'
+-r --request             set http request url. exp. '/' '/bucket' '/admin' '/bucket/object'
+--file                   set upload file
+--content                set http request body content
+--download               set loal file name for download
+--type                   default type is s3, you can use --type swift to sent swift request to radosgw
 '''
 
 
@@ -64,7 +63,7 @@ def main():
     try:
         options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:",
                                       ["help", "version", "config=", "version", "method=", "request=", "headers=",
-                                       "file=", "content=", "download=","type="])
+                                       "file=", "content=", "download=", "type="])
     except getopt.GetoptError as e:
         usage()
     _configure_file = expanduser("~") + '/ceph-request.cfg'
@@ -102,12 +101,11 @@ def main():
         elif o in ("--type",):
             _type = a
         else:
-            assert False, "未知的选项"
-
+            assert False, "unknow"
     try:
         ceph_request_config = set_configure(_configure_file)
     except CEPH_REQUEST_CONFIG_FILE_NOT_EXIST:
-        print "请设置好配置文件"
+        print "PLEASE PREPARE YOUR CONFIGURE FILE"
 
     if str(_method).lower() == 'get':
         if str(_type).lower() == 'swift':
@@ -184,7 +182,6 @@ def main():
                 content=_content,
                 show_dump=_show_dump
             )
-
     if str(_method).lower() == 'delete':
         if str(_type).lower() == 'swift':
             swift_delete(
@@ -204,7 +201,6 @@ def main():
                 secret_key=ceph_request_config['s3_secret_key'],
                 show_dump=_show_dump
             )
-
     if str(_method).lower() == 'head':
         if str(_type).lower() == 'swift':
             swift_head(
@@ -215,7 +211,6 @@ def main():
                 secret_key=ceph_request_config['swift_secret_key'],
                 show_dump=_show_dump
             )
-
         else:
             s3_head(
                 host=ceph_request_config['s3_host'],

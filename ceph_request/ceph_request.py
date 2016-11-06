@@ -187,7 +187,14 @@ def main():
 
     if str(_method).lower() == 'delete':
         if str(_type).lower() == 'swift':
-            swift_delete()
+            swift_delete(
+                host=ceph_request_config['swift_host'],
+                port=ceph_request_config['swift_port'],
+                cmd=_cmd,
+                subuser=ceph_request_config['swift_subuser'],
+                secret_key=ceph_request_config['swift_secret_key'],
+                show_dump=_show_dump
+            )
         else:
             s3_delete(
                 host=ceph_request_config['s3_host'],
@@ -200,7 +207,15 @@ def main():
 
     if str(_method).lower() == 'head':
         if str(_type).lower() == 'swift':
-            swift_head()
+            swift_head(
+                host=ceph_request_config['swift_host'],
+                port=ceph_request_config['swift_port'],
+                cmd=_cmd,
+                subuser=ceph_request_config['swift_subuser'],
+                secret_key=ceph_request_config['swift_secret_key'],
+                show_dump=_show_dump
+            )
+
         else:
             s3_head(
                 host=ceph_request_config['s3_host'],

@@ -286,8 +286,6 @@ set header
 range download
 ```
 [root@joke ceph-request]# ceph-request -c ceph-request.cfg  -m get -r '/yuliyang6/object1' --headers '{"Range": "bytes=0-10"}'  -v --download rangedownload -v 
-downloading...
-save as file rangedownload
 < GET /yuliyang6/object1 HTTP/1.1
 < Host: 192.168.10.147:8081
 < Connection: keep-alive

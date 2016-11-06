@@ -11,8 +11,6 @@ def s3_get(host='127.0.0.1', port='7480', cmd='/', access_key='', secret_key='',
         headers = json.loads(headers)
     if download_file:
         import shutil
-        print "downloading..."
-        print "save as file %s" %(download_file,)
         response = requests.get(url, auth=S3Auth(access_key, secret_key, service_url=host + ":" + port),stream=True,headers=headers)
         if response.status_code == 200 or response.status_code == 206:
             with open(download_file, 'wb') as f:

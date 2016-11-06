@@ -85,6 +85,11 @@ set header
 > 
 ```
 
+range download
+```
+ceph-request -c ceph-request.cfg  -m get -r '/yuliyang4/obj1' --headers '{"Range": "bytes=0-10"}'  -v --download rangedownload
+```
+
 ## swift
 
 list buckets

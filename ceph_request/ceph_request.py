@@ -50,7 +50,7 @@ secret_key = admin
 
 def main():
     try:
-        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help","version","config=", "version","method=","request=","header=","file=","content="])
+        options, args = getopt.getopt(sys.argv[1:], "hc:vm:r:", ["help","version","config=", "version","method=","request=","header=","file=","content=","download="])
     except getopt.GetoptError as e:
         usage()
     _configure_file = expanduser("~") + '/ceph-request.cfg'
@@ -60,6 +60,7 @@ def main():
     _file = None
     _content = None
     _show_dump = False
+    _down_load_file = None
     for o, a in options:
         if o == "-v":
             _show_dump = True
@@ -81,6 +82,8 @@ def main():
             _file = a
         elif o in ("--content",):
             _content = a
+        elif o in ("--download",):
+            _down_load_file = a
         else:
             assert False, "未知的选项"
 

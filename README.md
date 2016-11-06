@@ -471,3 +471,14 @@ head bucket
 > Connection: Keep-Alive
 > 
 ```
+
+## admin rest api
+show usage 
+```
+[root@graphite ~]# radosgw-admin caps add --uid=admin --caps="users=*;buckets=*;metadata=*;usage=*;zone=*"
+[root@graphite ~]# cat /etc/ceph/ceph.conf |grep rgw_enable_usage_log
+rgw_enable_usage_log = True
+
+ceph-request -c ceph-request.cfg  -m get -r '/admin/usage?format=json' |python -c 'import sys, json; print json.dumps(json.load(sys.stdin),indent=4)'
+
+```

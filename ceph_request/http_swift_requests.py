@@ -15,7 +15,7 @@ def swift_auth(serverurl,subuser=None,secret_key=None):
 
 def swift_get(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',headers=None,show_dump = False,download_file =None):
     '''
-    get request use aws2
+    swift get
     '''
     url = 'http://%s:%s%s' % (host,port,cmd)
     serverurl = '%s:%s' % (host,port)
@@ -30,7 +30,7 @@ def swift_get(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',
     if download_file:
         import shutil
         response = requests.get(url,stream=True,headers=headers)
-        if response.status_code == 200:
+        if response.status_code == 200 or response.status_code == 206:
             with open(download_file, 'wb') as f:
                 response.raw.decode_content = True
                 shutil.copyfileobj(response.raw, f)
@@ -46,12 +46,15 @@ def swift_get(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',
 
 # TODO ADD POST METHOD
 def swift_post(host='127.0.0.1', port='7480', cmd='/',subuser='', secret_key='',show_dump = False):
+    '''
+    swift post
+    '''
     pass
 
 # TODO ADD HEADER AND DATA SUPPORDED
 def swift_put(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',headers=None,file=None,content=None,show_dump = False):
     '''
-    put request use aws2
+    swift put
     '''
     url = 'http://%s:%s%s' % (host, port, cmd)
     serverurl = '%s:%s' % (host, port)
@@ -80,13 +83,15 @@ def swift_put(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',
     else:
         print response.content
 
-
 def swift_delete(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',show_dump = False):
     '''
-    delete request use aws2
+    swift delete
     '''
-    url = 'http://%s:%s%s' % (host,port,cmd)
-    response = requests.delete(url)
+    url = 'http://%s:%s%s' % (host, port, cmd)
+    serverurl = '%s:%s' % (host, port)
+    X_Auth_Token = swift_auth(serverurl, subuser=subuser, secret_key=secret_key)
+    headers = {'x-auth-token': X_Auth_Token}
+    response = requests.delete(url, headers=headers)
     if show_dump:
         data = dump.dump_all(response)
         print(data.decode('utf-8'))
@@ -95,10 +100,13 @@ def swift_delete(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key=
 
 def swift_head(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',show_dump = False):
     '''
-    head request use aws2
+    swift head
     '''
-    url = 'http://%s:%s%s' % (host,port,cmd)
-    response = requests.head(url)
+    url = 'http://%s:%s%s' % (host, port, cmd)
+    serverurl = '%s:%s' % (host, port)
+    X_Auth_Token = swift_auth(serverurl, subuser=subuser, secret_key=secret_key)
+    headers = {'x-auth-token': X_Auth_Token}
+    response = requests.head(url, headers=headers)
     if show_dump:
         data = dump.dump_all(response)
         print(data.decode('utf-8'))

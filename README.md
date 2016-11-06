@@ -25,7 +25,6 @@ upload file
 
 ```
 ceph-request -c ceph-request.cfg -m put -r '/yuliyang/object1' --file 1.txt
-
 ```
 
 upload file from content
@@ -106,4 +105,75 @@ ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang2'
 download file
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang/obj1'  --download swiftdownobj1
+```
+
+create bucket
+```
+[root@joke ceph-request]# ceph-request -c ceph-request.cfg --type swift -m put -r '/swift/v1/yuliyang7' -v
+< PUT /swift/v1/yuliyang7 HTTP/1.1
+< Host: 192.168.10.147:8081
+< Connection: keep-alive
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< User-Agent: python-requests/2.11.1
+< x-auth-token: AUTH_rgwtk0b00000061646d696e3a61646d696e41c33c216827b4c1341a20582da0f20b6aa54399651c2f2019ae5ec906daaa7514c04203
+< Content-Length: 0
+< 
+
+> HTTP/1.1 201 Created
+> X-Trans-Id: tx0000000000000000004b6-00581ec8b4-857b-default
+> Content-Length: 0
+> Accept-Ranges: bytes
+> Content-Type: text/plain; charset=utf-8
+> Date: Sun, 06 Nov 2016 06:07:48 GMT
+> Connection: Keep-Alive
+> 
+```
+detele bucket
+```
+[root@joke ceph-request]# ceph-request -c ceph-request.cfg --type swift -m delete -r '/swift/v1/yuliyang7' -v    
+< DELETE /swift/v1/yuliyang7 HTTP/1.1
+< Host: 192.168.10.147:8081
+< Connection: keep-alive
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< User-Agent: python-requests/2.11.1
+< x-auth-token: AUTH_rgwtk0b00000061646d696e3a61646d696ed5608bf6351a4b19511b2058318afd13fd76eb4638c4f2adceb10a1494f1e53fec2b7d04
+< Content-Length: 0
+< 
+
+> HTTP/1.1 204 No Content
+> X-Trans-Id: tx0000000000000000004bc-00581ec9d1-857b-default
+> Content-Length: 0
+> Accept-Ranges: bytes
+> Content-Type: text/plain; charset=utf-8
+> Date: Sun, 06 Nov 2016 06:12:33 GMT
+> Connection: Keep-Alive
+> 
+```
+head bucket
+```
+[root@joke ceph-request]# ceph-request -c ceph-request.cfg --type swift -m head -r '/swift/v1/yuliyang7' -v
+< HEAD /swift/v1/yuliyang7 HTTP/1.1
+< Host: 192.168.10.147:8081
+< Connection: keep-alive
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< User-Agent: python-requests/2.11.1
+< x-auth-token: AUTH_rgwtk0b00000061646d696e3a61646d696ed76ae2bde9a3afbe4a1b2058a9c52116f60814e969f07fe85e77a0ec812fec88752c31fe
+< 
+
+> HTTP/1.1 204 No Content
+> X-Timestamp: 0.00000
+> X-Container-Object-Count: 0
+> X-Container-Bytes-Used: 0
+> X-Container-Bytes-Used-Actual: 0
+> X-Storage-Policy: default-placement
+> X-Trans-Id: tx0000000000000000004ba-00581ec9ca-857b-default
+> Content-Length: 0
+> Accept-Ranges: bytes
+> Content-Type: text/plain; charset=utf-8
+> Date: Sun, 06 Nov 2016 06:12:26 GMT
+> Connection: Keep-Alive
+> 
 ```

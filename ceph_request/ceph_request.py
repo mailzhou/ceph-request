@@ -99,7 +99,8 @@ def main():
             cmd=_cmd,
             access_key=ceph_rquest_config['s3_access_key'],
             secret_key=ceph_rquest_config['s3_secret_key'],
-            show_dump=_show_dump
+            show_dump=_show_dump,
+            download_file=_down_load_file
         )
 
         # if str(_method).lower() == 'post':

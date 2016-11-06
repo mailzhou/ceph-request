@@ -38,7 +38,6 @@ secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
 --content                set http request body content
 --download               set loal file name for download
 --type                   default type is s3, you can use --type swift to sent swift request to radosgw
-
 ```
 
 create bucket named yuliyang

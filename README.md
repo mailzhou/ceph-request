@@ -472,6 +472,86 @@ head bucket
 > 
 ```
 
+copy object
+
+```
+#create object
+[root@NFJD-PSC-oNest-Mst-SV1 ceph-request]# ceph-request -c yuliyang.cfg --type swift  -m put -r '/swift/v1/yuliyang-b1/obj2' -v  --content 'dassduadhkwkdkad'
+< PUT /swift/v1/yuliyang-b1/obj2 HTTP/1.1
+< Host: 172.17.4.113:8081
+< Content-Length: 16
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< User-Agent: python-requests/2.6.0 CPython/2.7.5 Linux/3.10.0-327.el7.x86_64
+< Connection: keep-alive
+< x-auth-token: AUTH_rgwtk1100000079756c6979616e673a79756c6979616e67584b0577f36109bc510135587624e60e71ddd95421d2e6c940759dbf81087ed5d640b43d
+< 
+< dassduadhkwkdkad
+> HTTP/1.1 201 Created
+> content-length: 0
+> last-modified: Tue, 22 Nov 2016 02:39:13 GMT
+> connection: Keep-Alive
+> etag: b26e006d414526df944e4529fd837d41
+> x-trans-id: tx00000000000000000001c-005833afd1-32c79-guangzhou2-zone1
+> date: Tue, 22 Nov 2016 02:39:13 GMT
+> content-type: text/plain; charset=utf-8
+> 
+
+
+#copy object
+[root@NFJD-PSC-oNest-Mst-SV1 ceph-request]# ceph-request -c yuliyang.cfg --type swift   -m put -r '/swift/v1/yuliyang-b2/obj2copy' -v  --headers '{"X-Copy-From": "/yuliyang-b1/obj2"}'
+< PUT /swift/v1/yuliyang-b2/obj2copy HTTP/1.1
+< Host: 172.17.4.113:8081
+< X-Copy-From: /yuliyang-b1/obj2
+< Content-Length: 0
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< x-auth-token: AUTH_rgwtk1100000079756c6979616e673a79756c6979616e6724c01eb4db6317d462013558de7e91061298a016a83d4c450072c506fc80895f0b564b8c
+< Connection: keep-alive
+< User-Agent: python-requests/2.6.0 CPython/2.7.5 Linux/3.10.0-327.el7.x86_64
+< 
+
+> HTTP/1.1 201 Created
+> content-length: 0
+> x-copied-from-last-modified: Tue, 22 Nov 2016 02:39:13 GMT
+> x-copied-from: yuliyang-b1/obj2
+> last-modified: Tue, 22 Nov 2016 02:39:30 GMT
+> connection: Keep-Alive
+> etag: b26e006d414526df944e4529fd837d41
+> x-trans-id: tx00000000000000000001e-005833afe2-32c79-guangzhou2-zone1
+> date: Tue, 22 Nov 2016 02:39:30 GMT
+> x-copied-from-account: yuliyang
+> content-type: binary/octet-stream
+> 
+
+# get object 
+[root@NFJD-PSC-oNest-Mst-SV1 ceph-request]# ceph-request -c yuliyang.cfg --type swift   -m get -r '/swift/v1/yuliyang-b2/obj2copy' -v
+< GET /swift/v1/yuliyang-b2/obj2copy HTTP/1.1
+< Host: 172.17.4.113:8081
+< Connection: keep-alive
+< User-Agent: python-requests/2.6.0 CPython/2.7.5 Linux/3.10.0-327.el7.x86_64
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< x-auth-token: AUTH_rgwtk1100000079756c6979616e673a79756c6979616e67e3f05e450b32758f700135585401cf1c1f9e4bf24fc79ab9f1c5823779fd3db797d7a6b7
+< 
+
+> HTTP/1.1 200 OK
+> content-length: 16
+> accept-ranges: bytes
+> last-modified: Tue, 22 Nov 2016 02:39:30 GMT
+> connection: Keep-Alive
+> etag: b26e006d414526df944e4529fd837d41
+> x-timestamp: 1479782370.12263
+> x-trans-id: tx000000000000000000020-005833aff0-32c79-guangzhou2-zone1
+> date: Tue, 22 Nov 2016 02:39:44 GMT
+> content-type: binary/octet-stream
+> 
+dassduadhkwkdkad
+
+
+
+```
+
 ## admin rest api
 show usage 
 ```

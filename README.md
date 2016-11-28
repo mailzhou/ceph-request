@@ -562,3 +562,48 @@ rgw_enable_usage_log = True
 ceph-request -c ceph-request.cfg  -m get -r '/admin/usage?format=json' |python -c 'import sys, json; print json.dumps(json.load(sys.stdin),indent=4)'
 
 ```
+## set user quota
+```
+[root@ceph03 yuliyang]# ceph-request -c ceph-request.cfg  -m put -r '/admin/user?quota&uid=admin&quota-type=user' -v --content='{"enabled":true,"max_size_kb":102400,"max_objects":10000}'
+< PUT /admin/user?quota&uid=admin&quota-type=user HTTP/1.1
+< Host: 10.254.3.68:80
+< Content-Length: 57
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< User-Agent: python-requests/2.7.0 CPython/2.7.5 Linux/3.10.0-327.el7.x86_64
+< Connection: keep-alive
+< date: Mon, 28 Nov 2016 07:54:27 GMT
+< Authorization: AWS admin:uLpfBaynJ5U822yFxhITEoRnE5Y=
+< 
+< {"enabled":true,"max_size_kb":102400,"max_objects":10000}
+> HTTP/1.1 200 OK
+> date: Mon, 28 Nov 2016 07:54:27 GMT
+> content-length: 0
+> x-amz-request-id: tx0000000000000000000b3-00583be2b3-47e4a-default
+> connection: Keep-Alive
+> 
+
+```
+
+## get user quota
+```
+[root@ceph03 yuliyang]# ceph-request -c ceph-request.cfg  -m get -r '/admin/user?quota&uid=admin&quota-type=user' -v 
+< GET /admin/user?quota&uid=admin&quota-type=user HTTP/1.1
+< Host: 10.254.3.68:80
+< Accept-Encoding: gzip, deflate
+< Accept: */*
+< User-Agent: python-requests/2.7.0 CPython/2.7.5 Linux/3.10.0-327.el7.x86_64
+< Connection: keep-alive
+< date: Mon, 28 Nov 2016 07:54:30 GMT
+< Authorization: AWS admin:YHngaO+wMR36PZk9HDsHbbzjSWY=
+< 
+
+> HTTP/1.1 200 OK
+> date: Mon, 28 Nov 2016 07:54:30 GMT
+> content-length: 57
+> x-amz-request-id: tx0000000000000000000b4-00583be2b6-47e4a-default
+> connection: Keep-Alive
+> 
+{"enabled":true,"max_size_kb":102400,"max_objects":10000}
+```
+

@@ -19,7 +19,7 @@ setup(name='ceph-request',
       zip_safe=False,
       install_requires=[
         'requests-toolbelt',
-		    'requests',
+	'requests',
       ],
       entry_points={
         'console_scripts':[

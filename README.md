@@ -79,6 +79,23 @@ range download
 ```
 ceph-request -c ceph-request.cfg  -m get -r '/yuliyang6/object1' --headers '{"Range": "bytes=0-10"}'  -v --download rangedownload -v 
 ```
+enable bucket versioning
+```
+ceph-request -c ceph-request.cfg -m put -r '/version?versioning' -v --content '<?xml version="1.0" encoding="UTF-8"?><VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Status>Enabled</Status></VersioningConfiguration>'
+```
+Suspended versioning
+```
+ceph-request -c ceph-request.cfg -m put -r '/version?versioning' -v --content '<?xml version="1.0" encoding="UTF-8"?><VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Status>Suspended</Status></VersioningConfiguration>'
+```
+list all versioned object of named bucket
+```
+ceph-request -c ceph-request.cfg -m get -r '/version?versions' |xmllint  --format -
+```
+list all versioned object of named key
+```
+ceph-request -c ceph-request.cfg -m get -r '/version?versions&prefix=obj1' |xmllint  --format -
+```
+
 ## swift
 list buckets
 ```

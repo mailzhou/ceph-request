@@ -12,6 +12,21 @@ pip install ceph-request
 
 # HOW
 
+## create configure file
+```
+vim ceph-request.cfg 
+[s3]
+host = 192.168.10.147
+port = 8081
+access_key = admin
+secret_key = admin
+[swift]
+host = 192.168.10.147
+port = 8081
+subuser = admin:admin
+secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
+
+```
 ## s3
 
 ```

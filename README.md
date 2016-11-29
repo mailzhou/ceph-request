@@ -27,11 +27,12 @@ host = 192.168.10.147
 port = 8081
 subuser = admin:admin
 secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
+-h                       show help
 -c                       set configure file. the default configure file is ~/ceph-request.cfg.
 --version                get the version of ceph-request tool.
 -v                       show more info of request.
 -m --method              the http method. one type of [GET PUT POST DETELE HEAD]
--h --headers             set request header.   exp. --headers '{"Range": "bytes=0-10"}'
+--headers                set request header.   exp. --headers '{"Range": "bytes=0-10"}'
 -r --request             set http request url. exp. '/' '/bucket' '/admin' '/bucket/object'
 --file                   set upload file
 --content                set http request body content

@@ -156,18 +156,18 @@ copy object
 [root@NFJD-PSC-oNest-Mst-SV1 ceph-request]# ceph-request -c yuliyang.cfg --type swift   -m get -r '/swift/v1/yuliyang-b2/obj2copy' -v
 
 ```
-# set bucket public read
+set bucket public read
 ```
 [root@joke ceph-request]# ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-read": ".r:*"}'
 ```
 
-# set bucket public write
+set bucket public write
 
 ```
 [root@joke ceph-request]# ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-write": ".r:*"}'
 ```
 
-# set bucket public read and write
+set bucket public read and write
 ```
 [root@joke ceph-request]# ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-read": ".r:*","x-container-write": ".r:*"}'
 ```
@@ -184,12 +184,12 @@ rgw_enable_usage_log = True
 [root@graphite ~]# ceph-request -c ceph-request.cfg  -m get -r '/admin/usage?format=json' |python -c 'import sys, json; print json.dumps(json.load(sys.stdin),indent=4)'
 
 ```
-## set user quota
+set user quota
 ```
 [root@ceph03 yuliyang]# ceph-request -c ceph-request.cfg  -m put -r '/admin/user?quota&uid=admin&quota-type=user' -v --content='{"enabled":true,"max_size_kb":102400,"max_objects":10000}'
 ```
 
-## get user quota
+get user quota
 ```
 [root@ceph03 yuliyang]# ceph-request -c ceph-request.cfg  -m get -r '/admin/user?quota&uid=admin&quota-type=user' -v 
 ```

@@ -88,6 +88,15 @@ list bucket
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang2' -v
 ```
+list object with prefix
+```
+ceph-request -c ceph-request.cfg --type swift   -m get -r '/swift/v1/lyhbucket?prefix=prefix1' -v
+```
+list object with limits 
+```
+# list only 4 object
+ceph-request -c ceph-request.cfg --type swift   -m get -r '/swift/v1/lyhbucket?&limit=4' -v 
+```
 download file
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang/obj1'  --download swiftdownobj1 -v
@@ -138,7 +147,6 @@ cat /etc/ceph/ceph.conf |grep rgw_enable_usage_log
 rgw_enable_usage_log = True
 # show usage
 ceph-request -c ceph-request.cfg  -m get -r '/admin/usage?format=json' |python -c 'import sys, json; print json.dumps(json.load(sys.stdin),indent=4)'
-
 ```
 set user quota
 ```
@@ -148,4 +156,31 @@ get user quota
 ```
 ceph-request -c ceph-request.cfg  -m get -r '/admin/user?quota&uid=admin&quota-type=user' -v 
 ```
-
+create user
+```
+ceph-request -c ceph-request.cfg -m put -r '/admin/user?format=json&uid=user2&display-name=user2&email=user2@test.com' -v
+```
+delete user
+```
+ceph-request -c ceph-request.cfg -m delete -r '/admin/user?format=json&uid=user2&purge-data=True' -v
+```
+create subuser (swift)
+```
+ceph-request -c ceph-request.cfg -m put -r '/admin/user?format=json&uid=admin&subuser=user2-sub1&access=full&generate-secret=True' -v
+```
+get user info 
+```
+ceph-request -c ceph-request.cfg -m get -r '/admin/user?format=json&uid=user1' -v
+```
+list all users
+```
+ceph-request -c ceph-request.cfg -m get -r '/admin/metadata/user?format=json' -v
+```
+list all bucket of yuliyang user
+```
+ceph-request -c ceph-request.cfg -m get -r '/admin/bucket?format=json&uid=yuliyang' -v
+```
+get bucket index
+```
+ceph-request -c ceph-request.cfg -m get -r '/admin/bucket?index&format=json&bucket=yuliyang-b1&check-object=True&fix=True' -v
+```

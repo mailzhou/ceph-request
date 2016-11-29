@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.0.1'
+version = '0.0.3'
 
 setup(name='ceph-request',
       version=version,

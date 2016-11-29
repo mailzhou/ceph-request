@@ -45,7 +45,7 @@ def swift_get(host='127.0.0.1', port='7480', cmd='/', subuser='', secret_key='',
 
 
 # TODO ADD POST METHOD
-def swift_post(host='127.0.0.1', port='7480', cmd='/',subuser='', secret_key='',show_dump = False):
+def swift_post(host='127.0.0.1', port='7480', cmd='/',subuser='', secret_key='',headers=None,file=None,content=None,show_dump = False):
     '''
     swift post
     '''

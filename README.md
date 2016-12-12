@@ -154,6 +154,28 @@ set bucket public read and write
 ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-read": ".r:*","x-container-write": ".r:*"}'
 ```
 
+tempurl
+```
+ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1' -v --headers '{"X-Account-Meta-Temp-Url-Key": "1122"}'
+
+
+# -*- coding: utf-8 -*-
+import hmac
+from hashlib import sha1
+from time import time
+method = 'GET'
+key = '1122'  # the value in X-Account-Meta-Temp-Url-Key header
+duration_in_seconds = 60*60
+expires = int(time() + duration_in_seconds)
+path = '/swift/v1/test/swift_init.sh'
+hmac_body = '%s\n%s\n%s' % (method, expires, path)
+sig = hmac.new(key, hmac_body, sha1).hexdigest()
+s = '{path}?temp_url_sig={sig}&temp_url_expires={expires}'
+print s.format(path=path, sig=sig, expires=expires)
+
+curl "http://192.168.10.201/swift/v1/test/swift_init.sh?temp_url_sig=263cdcf75900f2eb2028a8d807cd1a02fd458c5e&temp_url_expires=1481561977"
+```
+
 ## admin rest api
 show usage 
 ```

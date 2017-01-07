@@ -174,6 +174,20 @@ s = '{path}?temp_url_sig={sig}&temp_url_expires={expires}'
 print s.format(path=path, sig=sig, expires=expires)
 
 curl "http://192.168.10.201/swift/v1/test/swift_init.sh?temp_url_sig=263cdcf75900f2eb2028a8d807cd1a02fd458c5e&temp_url_expires=1481561977"
+
+
+#s3
+import hmac
+import base64
+from hashlib import sha1
+from urllib import quote_plus
+Host = "192.168.10.201"
+access_key = "test"
+Expires = "1483802998"
+Bucket = "new-bucket-6ecf1981"
+Object = "2016-12-13_153252.jpg"
+print "http://"+Host+"/"+Bucket+"/"+Object+"?AWSAccessKeyId="+access_key+"&Expires="+Expires+"&Signature="+ \
+      quote_plus(base64.encodestring(hmac.new("test","GET\n\n\n"+Expires+"\n/"+Bucket+"/"+Object, sha1).digest()).strip())
 ```
 
 ## admin rest api

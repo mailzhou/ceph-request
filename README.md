@@ -126,6 +126,7 @@ ceph-request -c ceph-request.cfg -m get -r \
 
 ## swift功能例子
 >使用tempauth
+
 列出所有容器
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r \

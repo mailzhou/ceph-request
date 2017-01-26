@@ -1,136 +1,135 @@
-# SUPPORT S3/SWIFT/ADMIN REST API
+# ceph radosgw 工具，支持 S3/SWIFT/ADMIN REST API
 
-> WINDOWS PLATFORM NOT SUPPORT CURRENT VERSION 
+> 暂不支持window版本
 
-# INSTALL
-
+# 安装
 ```
+方式1：
 git clone git@github.com:wzyuliyang/ceph-request.git 
 cd ceph-request
 python setup.py install
-
-or
-
+方式2：
 pip install ceph-request
 ```
 
-# HOW
+# 使用
+## 创建配置文件，填写用户信息
 
-## create configure file
 ```
 vim ceph-request.cfg 
-[s3]
-host = 192.168.10.147
-port = 8081
-access_key = admin
-secret_key = admin
-[swift]
-host = 192.168.10.147
-port = 8081
-subuser = admin:admin
-secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP
-
+[s3]                   #s3账户配置
+host = 192.168.10.147  #radosgw地址
+port = 8081            #radosgw端口
+access_key = admin     #s3 access key
+secret_key = admin     #s3 secret key
+[swift]                #swift账户配置
+host = 192.168.10.147  #radosgw地址
+port = 8081            #radosgw端口
+subuser = admin:admin  #swift账户名字 
+secret_key = gA2BrFTKD3GyDd9b3FIOxDih0PRZBFda13f92GxP #swift账户 secret key
 ```
-## SHOW HELP
+## 帮助
 ```
 ceph-request -h
 ```
 
-## s3
-create bucket named yuliyang
+## s3功能例子
+创建名叫 yuliyang的桶，-v显示请求详细信息
 ```
 ceph-request -c ceph-request.cfg -m put -r '/yuliyang' -v
 ```
-delete bucket named yuliyang
+删除名叫 yuliyang的桶
 ```
 ceph-request -c ceph-request.cfg -m delete -r '/yuliyang2222' -v   
 ```
-upload file
+上传对象到yuliyang6 这个桶，上传后的对象名object1,本地的待上传文件名字setup.py
 ```
 ceph-request -c ceph-request.cfg -m put -r '/yuliyang6/object1' --file setup.py  -v    
 ```
-upload file from content
+上传对象，对象内容为--content字符串指定
 ```
 ceph-request -c ceph-request.cfg -m put -r '/yuliyang6/object2' --content 'sdadsa' -v
 ```
-delete object
+删除对象
 ```
 ceph-request -c ceph-request.cfg -m delete -r '/yuliyang6/object2'  -v                     
 ```
-get location of bucket named yuliyang
+获取桶的location信息
 ```
 ceph-request -c ceph-request.cfg -m get -r '/yuliyang6?location' -v
 ```
-get acl of bucket yuliyang
+获取桶的acl
 ```
 ceph-request -c ceph-request.cfg -m get -r '/yuliyang6?acl' -v        
 ```
-set acl for bucket yuliyang
+设置桶的acl
 ```
 ceph-request -c ceph-request.cfg -m put -r '/yuliyang6?acl' -v  --content '<?xml version="1.0" encoding="UTF-8"?><AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>admin</ID><DisplayName>admin</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>admin</ID><DisplayName>admin</DisplayName></Grantee><Permission>READ</Permission></Grant></AccessControlList></AccessControlPolicy>'
 ```
-set header
+给对象设置自定义metadata属性
 ```
 ceph-request -c ceph-request.cfg -m put -r '/yuliyang2/obj1'  --headers '{"x-amz-meta-cmcc":"onestgroup2"}'
-#head it 
+#获取对象属性
 ceph-request -c ceph-request.cfg -m head -r '/yuliyang2/obj1' -v                                       
 ```
-range download
+下载对象的一部分
 ```
 ceph-request -c ceph-request.cfg  -m get -r '/yuliyang6/object1' --headers '{"Range": "bytes=0-10"}'  -v --download rangedownload -v 
 ```
-enable bucket versioning
+开启桶的多版本
+
 ```
 ceph-request -c ceph-request.cfg -m put -r '/version?versioning' -v --content '<?xml version="1.0" encoding="UTF-8"?><VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Status>Enabled</Status></VersioningConfiguration>'
 ```
-Suspended versioning
+挂起（暂停）多版本
 ```
 ceph-request -c ceph-request.cfg -m put -r '/version?versioning' -v --content '<?xml version="1.0" encoding="UTF-8"?><VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Status>Suspended</Status></VersioningConfiguration>'
 ```
-list all versioned object of named bucket
+列出version桶内所有对象，包括多版本对象的其他版本
 ```
 ceph-request -c ceph-request.cfg -m get -r '/version?versions' |xmllint  --format -
 ```
-list all versioned object of named key
+列出某个对象的所有版本
 ```
 ceph-request -c ceph-request.cfg -m get -r '/version?versions&prefix=obj1' |xmllint  --format -
 ```
 
-## swift
-list buckets
+## swift功能例子
+>使用tempauth
+列出所有容器
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1' -v
 ```
-list bucket
+列出容器内对象
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang2' -v
 ```
-list object with prefix
+按对象前缀列出容器内对象
 ```
 ceph-request -c ceph-request.cfg --type swift   -m get -r '/swift/v1/lyhbucket?prefix=prefix1' -v
 ```
-list object with limits 
+限制列出对象请求返回的对象数 
 ```
 # list only 4 object
 ceph-request -c ceph-request.cfg --type swift   -m get -r '/swift/v1/lyhbucket?&limit=4' -v 
 ```
-download file
+下载对象
 ```
 ceph-request -c ceph-request.cfg --type swift -m get -r '/swift/v1/yuliyang/obj1'  --download swiftdownobj1 -v
 ```
-create bucket
+创建容器
 ```
 ceph-request -c ceph-request.cfg --type swift -m put -r '/swift/v1/yuliyang7' -v
 ```
-detele bucket
+删除容器
 ```
 ceph-request -c ceph-request.cfg --type swift -m delete -r '/swift/v1/yuliyang7' -v    
 ```
-head bucket
+获取容器属性
 ```
 ceph-request -c ceph-request.cfg --type swift -m head -r '/swift/v1/yuliyang7' -v
 ```
-copy object
+拷贝对象
 ```
 #create object
 ceph-request -c yuliyang.cfg --type swift  -m put -r '/swift/v1/yuliyang-b1/obj2' -v  --content 'dassduadhkwkdkad'
@@ -141,20 +140,19 @@ ceph-request -c yuliyang.cfg --type swift   -m put -r '/swift/v1/yuliyang-b2/obj
 # get object 
 ceph-request -c yuliyang.cfg --type swift   -m get -r '/swift/v1/yuliyang-b2/obj2copy' -v
 ```
-set bucket public read
+设置容器可读
 ```
 ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-read": ".r:*"}'
 ```
-set bucket public write
+设置容器可写
 ```
 ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-write": ".r:*"}'
 ```
-set bucket public read and write
+设置容器公开可读可写
 ```
 ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1/asdadas' -v --headers '{"x-container-read": ".r:*","x-container-write": ".r:*"}'
 ```
-
-tempurl
+tempurl分享
 ```
 ceph-request -c ceph-request.cfg --type swift   -m post -r '/swift/v1' -v --headers '{"X-Account-Meta-Temp-Url-Key": "1122"}'
 
@@ -190,8 +188,9 @@ print "http://"+Host+"/"+Bucket+"/"+Object+"?AWSAccessKeyId="+access_key+"&Expir
       quote_plus(base64.encodestring(hmac.new("test","GET\n\n\n"+Expires+"\n/"+Bucket+"/"+Object, sha1).digest()).strip())
 ```
 
-## admin rest api
-show usage 
+## admin rest api 管理员接口
+
+显示统计信息
 ```
 # add user cap
 radosgw-admin caps add --uid=admin --caps="users=*;buckets=*;metadata=*;usage=*;zone=*"
@@ -201,39 +200,50 @@ rgw_enable_usage_log = True
 # show usage
 ceph-request -c ceph-request.cfg  -m get -r '/admin/usage?format=json' |python -c 'import sys, json; print json.dumps(json.load(sys.stdin),indent=4)'
 ```
-set user quota
+
+设置用户配额
 ```
 ceph-request -c ceph-request.cfg  -m put -r '/admin/user?quota&uid=admin&quota-type=user' -v --content='{"enabled":true,"max_size_kb":102400,"max_objects":10000}'
 ```
-get user quota
+获取用户配额
 ```
 ceph-request -c ceph-request.cfg  -m get -r '/admin/user?quota&uid=admin&quota-type=user' -v 
 ```
-create user
+创建父用户
 ```
 ceph-request -c ceph-request.cfg -m put -r '/admin/user?format=json&uid=user2&display-name=user2&email=user2@test.com' -v
 ```
-delete user
+删除父用户
 ```
 ceph-request -c ceph-request.cfg -m delete -r '/admin/user?format=json&uid=user2&purge-data=True' -v
 ```
-create subuser (swift)
+删除子用户(swift)
 ```
 ceph-request -c ceph-request.cfg -m put -r '/admin/user?format=json&uid=admin&subuser=user2-sub1&access=full&generate-secret=True' -v
 ```
-get user info 
+获取用户信息 
 ```
 ceph-request -c ceph-request.cfg -m get -r '/admin/user?format=json&uid=user1' -v
 ```
-list all users
+列出所有用户
 ```
 ceph-request -c ceph-request.cfg -m get -r '/admin/metadata/user?format=json' -v
 ```
-list all bucket of yuliyang user
+列出某个用户的所有桶列表
 ```
 ceph-request -c ceph-request.cfg -m get -r '/admin/bucket?format=json&uid=yuliyang' -v
 ```
-get bucket index
+获取桶的index
 ```
 ceph-request -c ceph-request.cfg -m get -r '/admin/bucket?index&format=json&bucket=yuliyang-b1&check-object=True&fix=True' -v
+```
+
+创建s3密钥(子账户)
+```
+ceph-request -c admin  -m put -r '/admin/user?key&format=json&uid=user2&subuser=swift4&key-type=s3' |json
+```
+
+创建s3密钥(父账户)
+```
+ceph-request -c admin  -m put -r '/admin/user?key&format=json&uid=user2&key-type=s3' |json
 ```

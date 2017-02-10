@@ -123,6 +123,12 @@ ceph-request -c ceph-request.cfg -m get -r \
 '/{bucket}?versions&prefix={obj_prefix}' \
 |xmllint  --format -
 ```
+删除某个版本
+```
+ceph-request -c ceph-request.cfg -m delete -r  \
+'/{bucket}/{object}?versionId={verisonID}' \ 
+|xmllint  --format -
+```
 
 ## swift功能例子
 >使用tempauth
